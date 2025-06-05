@@ -1,3 +1,6 @@
 {
-  "conventionalCommits.scopes": ["models"]
+  "conventionalCommits.scopes": [
+    "models",
+    "services"
+  ]
 }
