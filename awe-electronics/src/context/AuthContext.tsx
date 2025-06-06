@@ -18,6 +18,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   // Check for existing user session on load
   useEffect(() => {
+    // Clear stored user automatically in dev mode (easier testing)
+    if (import.meta.env.DEV) {
+        localStorage.removeItem('user');
+    }
+
+    // Try to retrieve user from localStorage
     const storedUser = localStorage.getItem('user');
     
     if (storedUser) {
