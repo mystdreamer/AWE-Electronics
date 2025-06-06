@@ -1,12 +1,14 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { User } from '@shared/schema';
+import { Order, User } from '@shared/schema';
 import { AuthFacade } from '@/patterns';
+import { UserOperationFacade } from '@/patterns/facade/UserOperationFacade';
 
 interface AuthContextProps {
   user: User | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  getOrders: () => Promise<Order[]>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -15,17 +17,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const authFacade = new AuthFacade();
-  
-  // Check for existing user session on load
+
   useEffect(() => {
-    // Clear stored user automatically in dev mode (easier testing)
     if (import.meta.env.DEV) {
-        localStorage.removeItem('user');
+      localStorage.removeItem('user');
     }
 
-    // Try to retrieve user from localStorage
     const storedUser = localStorage.getItem('user');
-    
+
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -34,24 +33,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('user');
       }
     }
-    
+
     setIsLoading(false);
   }, []);
-  
-  // Login function
+
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      
-      // Authenticate via AuthFacade
-      const authenticatedUser = authFacade.login(username, password);
-      
+
+      const authenticatedUser = await authFacade.login(username, password); // missing `await`
+
       if (authenticatedUser) {
         setUser(authenticatedUser);
         localStorage.setItem('user', JSON.stringify(authenticatedUser));
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Login error:', error);
@@ -60,29 +57,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(false);
     }
   };
-  
-  // Logout function
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
   };
-  
+
+  const getOrders = async (): Promise<Order[]> => {
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    try {
+      const facade = new UserOperationFacade();
+      return await facade.getOrders();
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+      return [];
+    }
+  };
+
   const value = {
     user,
     login,
     logout,
     isLoading,
+    getOrders,
   };
-  
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  
   return context;
 }
