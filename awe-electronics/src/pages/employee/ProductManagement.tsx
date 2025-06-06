@@ -93,7 +93,6 @@ export default function ProductManagement() {
 
     try {
       setIsUpdating(true);
-      const updatedProduct = employeeFacade.updateProductDescription(
 
       console.log('Updating product (Repository Pattern)');
       console.log('Original Description:', selectedProduct.description);
