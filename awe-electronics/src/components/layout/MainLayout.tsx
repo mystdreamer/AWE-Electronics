@@ -16,6 +16,7 @@ import {
 import Cart from '../customer/Cart';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import Footer from '@/components/ui/footer';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -120,15 +121,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <main className="flex-grow">
         {children}
       </main>
-
-      <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
-            Design Patterns Demo - Showcasing Facade, Strategy, Observer, and Repository patterns
-          </p>
-        </div>
-      </footer>
-
+      
+      {/* Footer */}
+      <Footer />
       {/* Shopping Cart Sidebar */}
       <Cart />
     </div>

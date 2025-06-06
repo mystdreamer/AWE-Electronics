@@ -211,7 +211,7 @@ export default function Checkout() {
             </CardContent>
             <CardFooter className="flex justify-between">
               <Button
-                variant="outline"
+                variant="default"
                 onClick={() => navigate('/products')}
               >
                 Back to Shopping
