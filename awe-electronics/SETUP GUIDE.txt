@@ -1,0 +1,45 @@
+Setup Guide
+===========
+
+Getting Started – Local Installation
+---------------------------------------
+Follow these steps to run the project locally using Node.js and npm.
+
+REQUIREMENTS
+------------
+- Node.js v18 or newer
+  → https://nodejs.org/
+- Git (to clone the repository)
+  → https://git-scm.com/
+
+INSTALLATION
+------------
+1. Clone the repository:
+   git clone https://github.com/YOUR_USERNAME/awe-electronics.git
+   cd awe-electronics
+
+2. Install dependencies:
+   npm install
+
+3. Run the development server:
+   npm run dev
+
+4. Open your browser and go to:
+   http://localhost:5173 (or local environment prompted by terminal if different)
+
+DEMO ACCOUNTS
+-------------
+You can log in using one of these demo users:
+
+Customer:
+  Username: customer1
+  Password: pass123
+
+Employee:
+  Username: employee1
+  Password: pass456
+
+Use the "Autofill" buttons on the login page for quick testing.
+
+> Built with Vite + React + TS
+
