@@ -280,9 +280,9 @@ export class ReceiptGenerator implements PaymentObserver {
     const receipt: Omit<Receipt, 'id'> = {
       orderId: data.order.id,
       receiptNumber,
-      amount: data.paymentAmount.toString(),
+      amount: data.paymentAmount,
       paymentMethod: data.paymentMethod,
-      createdAt: new Date()
+      createdAt: new Date().toISOString()
     };
     
     const newReceipt = this.receiptRepository.create(receipt);
@@ -400,9 +400,9 @@ export class CustomerFacade {
       items: items,
       shippingAddress,
       paymentMethod,
-      total: total.toString(),
-      createdAt: new Date(),
-      updatedAt: new Date()
+      total: total,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     
     // Process payment using Strategy Pattern
