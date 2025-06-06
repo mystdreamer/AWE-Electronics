@@ -51,7 +51,7 @@ export const mockProducts: Product[] = [
     name: "Arduino-Compatible UNO Board",
     description: "ATmega328-based microcontroller board for prototyping projects.",
     price: 39.95,
-    image: fallbackImage,
+    image: "https://store.arduino.cc/cdn/shop/files/ABX00021_03.front_804x603.jpg?v=1727098283",
     category: "Components",
     stock: 25
   },
@@ -69,7 +69,7 @@ export const mockProducts: Product[] = [
     name: "Raspberry Pi 4 Model B (4GB)",
     description: "Single-board computer with 4GB RAM and dual micro-HDMI.",
     price: 129.00,
-    image: fallbackImage,
+    image: "https://opensource.com/sites/default/files/lead-images/raspberry-pi-4_lead.jpg",
     category: "Components",
     stock: 10
   },
