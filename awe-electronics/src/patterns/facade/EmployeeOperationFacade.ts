@@ -84,7 +84,7 @@ export class EmployeeOperationFacade {
    * Update a product description
    * This is one of the key scenarios: Employee updates product description
    */
-  public updateProductDescription(productId: number, newDescription: string): Product {
+  public updateProductDetails(productId: number, data: { description?: string; stock?: number }): Product {
     const product = this.productRepository.getById(productId);
 
     if (!product) {
@@ -93,7 +93,8 @@ export class EmployeeOperationFacade {
 
     const updatedProduct: Product = {
       ...product,
-      description: newDescription,
+      description: data.description ?? product.description,
+      stock: data.stock ?? product.stock,
     };
 
     return this.productRepository.update(updatedProduct);

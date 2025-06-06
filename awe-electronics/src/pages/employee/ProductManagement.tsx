@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Product } from '@shared/schema';
-import { EmployeeFacade } from '@/patterns';
+import { EmployeeOperationFacade } from "@/patterns/facade/EmployeeOperationFacade";
 import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,9 +45,10 @@ export default function ProductManagement() {
   const [editedDescription, setEditedDescription] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [editedStock, setEditedStock] = useState<number>(0);
   
   // Create an instance of the EmployeeFacade (Facade Pattern)
-  const employeeFacade = new EmployeeFacade();
+  const employeeFacade = new EmployeeOperationFacade();
   
   // Fetch products using the facade pattern
   useEffect(() => {
@@ -83,28 +84,35 @@ export default function ProductManagement() {
     setEditedDescription(product.description);
     setIsEditDialogOpen(true);
     setUpdateSuccess(false);
+    setEditedStock(product.stock);
   };
   
-  // Save updated product description
-  const handleSaveDescription = async () => {
+  // Save updated product details
+  const handleSaveProduct = async () => {
     if (!selectedProduct) return;
-    
+
     try {
       setIsUpdating(true);
-      
-      console.log('Updating product description (Repository Pattern)');
-      console.log('Original:', selectedProduct.description);
-      console.log('Updated:', editedDescription);
-      
-      // Update product using the Facade pattern
       const updatedProduct = employeeFacade.updateProductDescription(
+
+      console.log('Updating product (Repository Pattern)');
+      console.log('Original Description:', selectedProduct.description);
+      console.log('Updated Description:', editedDescription);
+      console.log('Original Stock:', selectedProduct.stock);
+      console.log('Updated Stock:', editedStock);
+
+      // Use facade to update product
+      const updatedProduct = employeeFacade.updateProductDetails(
         selectedProduct.id,
-        editedDescription
+        {
+          description: editedDescription,
+          stock: editedStock,
+        }
       );
       
       // Update local state
-      setProducts(prevProducts => 
-        prevProducts.map(p => 
+      setProducts(prevProducts =>
+        prevProducts.map(p =>
           p.id === updatedProduct.id ? updatedProduct : p
         )
       );
@@ -202,7 +210,7 @@ export default function ProductManagement() {
                           {product.category}
                         </Badge>
                       </TableCell>
-                      <TableCell>{formatCurrency(parseFloat(product.price))}</TableCell>
+                      <TableCell>{formatCurrency(product.price)}</TableCell>
                       <TableCell>
                         <Badge className={
                           product.stock > 10 ? "bg-green-100 text-green-800 hover:bg-green-200" : 
@@ -267,6 +275,18 @@ export default function ProductManagement() {
                       rows={5}
                     />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="productStock">Stock</Label>
+                    <Input
+                      id="productStock"
+                      type="number"
+                      value={editedStock}
+                      onChange={(e) => setEditedStock(Number(e.target.value))}
+                      placeholder="Enter stock amount"
+                      min={0}
+                    />
+                  </div>
                 </div>
                 
                 <DialogFooter>
@@ -278,8 +298,14 @@ export default function ProductManagement() {
                     Cancel
                   </Button>
                   <Button
-                    onClick={handleSaveDescription}
-                    disabled={isUpdating || editedDescription === selectedProduct?.description}
+                    onClick={handleSaveProduct}
+                    disabled={
+                      isUpdating || 
+                      (
+                        editedDescription.trim() === selectedProduct?.description.trim() && 
+                        editedStock === selectedProduct?.stock
+                      )
+                    }
                   >
                     {isUpdating ? 'Saving...' : 'Save Changes'}
                   </Button>
