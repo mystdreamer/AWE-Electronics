@@ -1,11 +1,11 @@
 /**
- * Design Patterns for E-commerce Application
+ * Design Patterns for AWE-Electronics E-commerce App
  * 
  * This file centralises the implementation of the four design patterns:
- * 1. Facade Pattern - Simplifies complex subsystems interactions
- * 2. Strategy Pattern - Encapsulates family of algorithms for payment processing
- * 3. Observer Pattern - Defines one-to-many dependency for post-payment actions
- * 4. Repository Pattern - Abstracts data access logic
+ * Facade Pattern - Simplifies complex subsystems interactions
+ * Strategy Pattern - Encapsulates family of algorithms for payment processing
+ * Observer Pattern - Defines one-to-many dependency for post-payment actions
+ * Repository Pattern - Abstracts data access logic
  */
 
 import { 
@@ -264,7 +264,7 @@ export interface PaymentObserver {
   update(data: PaymentEventData): void;
 }
 
-// Receipt Generator - One of the observers
+// Receipt Generator Observers
 export class ReceiptGenerator implements PaymentObserver {
   private receiptRepository: ReceiptRepository;
   
@@ -291,7 +291,7 @@ export class ReceiptGenerator implements PaymentObserver {
   }
 }
 
-// Inventory Manager - Another observer
+// Inventory Manager Observer
 export class InventoryManager implements PaymentObserver {
   update(data: PaymentEventData): void {
     console.log('Updating inventory for order:', data.order.orderNumber);
@@ -306,7 +306,7 @@ export class InventoryManager implements PaymentObserver {
   }
 }
 
-// Shipping Coordinator - Another observer
+// Shipping Coordinator Observer
 export class ShippingCoordinator implements PaymentObserver {
   update(data: PaymentEventData): void {
     console.log('Preparing shipment for order:', data.order.orderNumber);

@@ -105,11 +105,10 @@ export default function Checkout() {
   }
   
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">
-        Checkout
-      </h1>
-      
+      <div className="max-w-4xl mx-auto px-4 py-12">
+        <h1 className="text-3xl font-extrabold text-foreground mb-8 text-center">
+          Checkout
+        </h1>
       <div className="grid md:grid-cols-3 gap-8">
         {/* Order Summary */}
         <div className="md:col-span-1">

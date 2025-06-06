@@ -71,11 +71,9 @@ export default function Products() {
     <div className="py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-900">Product Catalog</h1>
-          <p className="mt-4 text-lg text-gray-500">
-            Browse our collection and add items to your cart
-          </p>
-          
+        <h1 className="text-3xl font-extrabold text-foreground">Product Catalogue</h1>
+        <p className="mt-4 text-lg text-muted-foreground">Browse our collection and add items to your cart</p>
+        
           {/* Search and filter controls */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
             <div className="relative flex-grow">
@@ -108,7 +106,7 @@ export default function Products() {
         {/* Product grid */}
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No products found matching your criteria.</p>
+            <p className="text-muted-foreground">No products found matching your criteria.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
