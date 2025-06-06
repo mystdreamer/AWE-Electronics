@@ -1,63 +1,81 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { queryClient } from "./lib/queryClient";
+import Login from "./pages/Login";
+import Products from "./pages/customer/Products";
+import Checkout from "./pages/customer/Checkout";
+import OrderConfirmation from "./pages/customer/OrderConfirmation";
+import ProductManagement from "./pages/employee/ProductManagement";
+import NotFound from "@/pages/not-found";
+import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
+import MainLayout from "./components/layout/MainLayout";
+import { QueryClientProvider } from "@tanstack/react-query";
 
-import Login from './pages/Login';
-import Products from './pages/customer/Products';
-import Dashboard from './pages/employee/Dashboard';
+/**
+ * Main App component
+ * 
+ * Prototype to showcase 4 key scenarios:
+ * 1. User can browse catalogue and add items to cart (Products page)
+ * 2. User can select a payment method (Checkout page)
+ * 3. Receipt generator via Observer pattern (OrderConfirmation page)
+ * 4. Employee updates product description (ProductManagement page)
+ */
 
-function RoleRedirect() {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) return;
-
-    if (user.role === 'customer') {
-      navigate('/customer');
-    } else if (user.role === 'employee') {
-      navigate('/employee');
-    }
-  }, [user, navigate]);
-
-  return null;
-}
-
-import type { ReactNode } from 'react';
-
-function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) return <p>Loading...</p>;
-  if (!user) return <Navigate to="/login" replace />;
-
-  return children;
-}
-
-export default function App() {
+function App() {
   return (
-    <Router>
-      <RoleRedirect />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/customer"
-          element={
-            <ProtectedRoute>
-              <Products />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/employee"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <Toaster />
+            <Routes>
+              <Route path="/" element={<Login />} />
+              
+              {/* Customer Routes - Browsing */}
+              <Route 
+                path="/products" 
+                element={
+                  <MainLayout>
+                    <Products />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/checkout" 
+                element={
+                  <MainLayout>
+                    <Checkout />
+                  </MainLayout>
+                } 
+              />
+              <Route 
+                path="/order-confirmation/:id" 
+                element={
+                  <MainLayout>
+                    <OrderConfirmation />
+                  </MainLayout>
+                } 
+              />
+
+              {/* Employee Route */}
+              <Route 
+                path="/product-management" 
+                element={
+                  <MainLayout>
+                    <ProductManagement />
+                  </MainLayout>
+                } 
+              />
+
+              {/* Fallback */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
+
+export default App;
